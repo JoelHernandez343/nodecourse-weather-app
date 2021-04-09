@@ -1,4 +1,7 @@
-const { pause, menu } = require('./modules/inquirer');
+const Searches = require('./models/search');
+const { pause, menu, ask } = require('./modules/inquirer');
+
+const search = new Searches();
 
 const app = async () => {
   let option = '1';
@@ -12,6 +15,8 @@ const app = async () => {
 const switchOption = async option => {
   switch (option) {
     case '1':
+      const place = await ask('Input the place to search:');
+      search.city(place);
       break;
 
     case '0':
