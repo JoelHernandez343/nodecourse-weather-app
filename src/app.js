@@ -4,6 +4,8 @@ const { pause, menu, ask } = require('./modules/inquirer');
 const search = new Searches();
 
 const app = async () => {
+  console.clear();
+
   let option = '1';
 
   do {
@@ -16,7 +18,7 @@ const switchOption = async option => {
   switch (option) {
     case '1':
       const place = await ask('Input the place to search:');
-      search.city(place);
+      await search.city(place);
       break;
 
     case '0':
