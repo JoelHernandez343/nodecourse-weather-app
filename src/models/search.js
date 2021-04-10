@@ -18,12 +18,18 @@ class Searches {
         params: this._ParamsMapbox,
       });
 
-      const rest = await instance.get();
-      console.log(rest.data);
+      const res = await instance.get();
+      return res.data.features.map(place => ({
+        id: place.id,
+        name: place.place_name,
+        value: place.id,
+        description: place.place_name,
+        longitude: place.center[0],
+        latitude: place.center[1],
+      }));
     } catch (err) {
       console.log(err);
     }
-    return [];
   }
 }
 

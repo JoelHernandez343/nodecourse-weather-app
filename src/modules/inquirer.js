@@ -56,38 +56,25 @@ const ask = async message => {
   return result;
 };
 
-const getTasksToDelete = async tasks => {
-  const choices = tasks.map(({ id, description }, i) => ({
-    value: id,
+const choiceSingleItem = async (options, message) => {
+  const choices = options.map(({ value, description }, i) => ({
+    value,
     name: `${`${i + 1}.`.green} ${description}`,
-    checked: false,
   }));
 
-  const { ids } = await inquirer.prompt({
-    type: 'checkbox',
-    name: 'ids',
-    message: 'Mark tasks to delete them. Leave blank to cancel:',
+  choices.unshift({
+    value: '0',
+    name: `${`0.`.green} Cancel`,
+  });
+
+  const { item } = await inquirer.prompt({
+    type: 'list',
+    name: 'item',
+    message,
     choices,
   });
 
-  return ids;
-};
-
-const getTasksToggle = async tasks => {
-  const choices = tasks.map(({ id, description, date }, i) => ({
-    value: id,
-    name: `${`${i + 1}.`.green} ${description}`,
-    checked: !!date,
-  }));
-
-  const { ids } = await inquirer.prompt({
-    type: 'checkbox',
-    name: 'ids',
-    message: 'Mark tasks as completed or unmark them to set pending:',
-    choices,
-  });
-
-  return ids;
+  return item;
 };
 
 const confirm = async message => {
@@ -101,10 +88,9 @@ const confirm = async message => {
 };
 
 module.exports = {
-  getTasksToDelete,
-  getTasksToggle,
-  menu,
-  confirm,
-  pause,
   ask,
+  menu,
+  pause,
+  confirm,
+  choiceSingleItem,
 };
