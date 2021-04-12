@@ -5,6 +5,8 @@ const file = 'history.json';
 
 class History {
   constructor() {
+    this._history = [];
+
     this.load();
   }
 
@@ -13,7 +15,8 @@ class History {
       return;
     }
 
-    this._history.push(place);
+    this._history.unshift(place);
+    this._history = this._history.splice(0, 10);
 
     this.save();
   }
