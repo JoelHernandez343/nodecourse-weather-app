@@ -24,9 +24,18 @@ const questions = prev => ({
 
 const menu = async prev => {
   console.clear();
-  console.log('----------------------------------'.yellow.bgBlack);
-  console.log('       Weather console app        '.bold.white.bgBlack);
-  console.log('----------------------------------\n'.yellow.bgBlack);
+  console.log(
+    '------------------------------------------------------------------'.yellow
+      .bgBlack
+  );
+  console.log(
+    '                       Weather console app                        '.white
+      .bgBlack.bold
+  );
+  console.log(
+    '------------------------------------------------------------------\n'
+      .yellow.bgBlack
+  );
 
   const { option } = await inquirer.prompt(questions(prev));
 
