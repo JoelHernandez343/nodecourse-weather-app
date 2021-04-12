@@ -15,12 +15,9 @@ const app = async () => {
 const switchOption = async option => {
   switch (option) {
     case '1':
-      const place = await searchPlace();
-      if (!place) {
+      if (!(await searchPlace())) {
         return;
       }
-
-      showPlace(place);
       break;
 
     case '0':
