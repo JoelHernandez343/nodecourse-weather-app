@@ -1,7 +1,5 @@
-const Searches = require('./models/search');
-const { pause, menu, ask, choiceSingleItem } = require('./modules/inquirer');
-
-const search = new Searches();
+const { pause, menu } = require('./modules/inquirer');
+const { searchPlace, showPlace } = require('./modules/place');
 
 const app = async () => {
   console.clear();
@@ -17,10 +15,12 @@ const app = async () => {
 const switchOption = async option => {
   switch (option) {
     case '1':
-      if (!(await searchPlace(option))) {
-        console.log('k pedo');
+      const place = await searchPlace();
+      if (!place) {
         return;
       }
+
+      showPlace(place);
       break;
 
     case '0':
@@ -29,20 +29,6 @@ const switchOption = async option => {
   }
 
   await pause();
-};
-
-const searchPlace = async option => {
-  const term = await ask('Input the place to search:');
-  const places = await search.city(term);
-  const selection = await choiceSingleItem(places, 'Select a city:');
-
-  if (selection === '0') {
-    return false;
-  }
-
-  console.log(selection);
-
-  return true;
 };
 
 module.exports = app;
