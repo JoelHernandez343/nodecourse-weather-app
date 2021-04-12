@@ -1,5 +1,8 @@
 const { pause, menu } = require('./modules/inquirer');
-const { searchPlace, showPlace } = require('./modules/place');
+const { searchPlace, selectPlace } = require('./modules/place');
+const History = require('./modules/history');
+
+const history = new History();
 
 const app = async () => {
   console.clear();
@@ -15,9 +18,18 @@ const app = async () => {
 const switchOption = async option => {
   switch (option) {
     case '1':
-      if (!(await searchPlace())) {
-        return;
-      }
+      const place = await searchPlace();
+
+      if (place === 'canceled') return;
+      if (place !== 'error') history.add(place);
+
+      break;
+
+    case '2':
+      const res = await selectPlace(history.list);
+
+      if (res === 'canceled') return;
+
       break;
 
     case '0':

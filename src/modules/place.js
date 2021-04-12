@@ -2,21 +2,32 @@ const wordwrap = require('wordwrapjs/dist');
 require('colors');
 
 const { getPlaces, getWeather } = require('./axios');
-const { showIconWithInfo } = require('./icons');
 const { ask, choiceSingleItem } = require('./inquirer');
+const { showIconWithInfo } = require('./icons');
 
 const searchPlace = async () => {
   const term = await ask('Input the place to search:');
   const places = await getPlaces(term);
 
   if (places === false) {
-    return true;
+    return 'error';
   }
 
-  const selection = await choiceSingleItem(places, 'Select a city:');
+  return selectPlace(places);
+};
+
+const selectPlace = async places => {
+  if (places.length === 0) {
+    return 'error';
+  }
+
+  const selection = await choiceSingleItem(
+    places,
+    'Select a city to check weather:'
+  );
 
   if (selection === '0') {
-    return false;
+    return 'canceled';
   }
 
   const place = places.find(place => place.id === selection);
@@ -26,15 +37,15 @@ const searchPlace = async () => {
   });
 
   if (weather === false) {
-    return true;
+    return place;
   }
 
-  showPlace(place, weather);
+  showWeatherPlace(place, weather);
 
-  return true;
+  return place;
 };
 
-const showPlace = (place, weather) => {
+const showWeatherPlace = (place, weather) => {
   console.log('  Place information'.green);
 
   const info = [
@@ -57,4 +68,4 @@ const showPlace = (place, weather) => {
   showIconWithInfo(weather.icon, info);
 };
 
-module.exports = { searchPlace };
+module.exports = { searchPlace, selectPlace };
