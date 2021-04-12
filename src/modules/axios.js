@@ -20,16 +20,20 @@ const getPlaces = async place => {
       params: placeParams,
     });
 
-    const places = await instance.get();
+    const {
+      data: { features },
+    } = await instance.get();
 
-    return places.data.features.map(place => ({
-      id: place.id,
-      name: place.place_name,
-      value: place.id,
-      description: place.place_name,
-      longitude: place.center[0],
-      latitude: place.center[1],
-    }));
+    return features.map(
+      ({ id, place_name: name, center: [longitude, latitude] }) => ({
+        id,
+        name,
+        value: id,
+        description: name,
+        longitude,
+        latitude,
+      })
+    );
   } catch (err) {
     console.log(err);
 
@@ -44,18 +48,20 @@ const getWeather = async coordinates => {
       params: weatherParams(coordinates),
     });
 
-    const res = await instance.get();
-    const weather = res.data.weather[0];
-    const main = res.data.main;
+    const {
+      data: {
+        weather: [{ description, icon }],
+        main: { temp, temp_min: min, temp_max: max, humidity },
+      },
+    } = await instance.get();
 
     return {
-      description: weather.description,
-      icon: weather.icon,
-      temp: main.temp,
-      feels_like: main.feels_like,
-      min: main.temp_min,
-      max: main.temp_max,
-      humidity: main.humidity,
+      description,
+      icon,
+      temp,
+      min,
+      max,
+      humidity,
     };
   } catch (err) {
     console.log(err);
